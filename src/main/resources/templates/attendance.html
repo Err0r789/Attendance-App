@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; 
+            justify-content: center; 
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px; 
+            margin-bottom: 10px; 
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%; 
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px; 
+            border: none;
+            cursor: pointer;
+            border-radius: 5px; 
+            font-size: 16px; 
+            text-transform: uppercase; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+            width: 200px; 
+            margin-bottom: 10px; 
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #currentDateTime {
+            font-size: 16px;
+            color: #666; 
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Attendance Records</h1>
+    <p id="currentDateTime"></p>
+    <div class="buttons">
+        <form id="signInForm" th:action="@{/attendance/sign-in}" method="post">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="currentDate" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+            <button type="submit">Sign In</button>
+        </form>
+        <form id="signOutForm" th:action="@{/attendance/sign-out}" method="post" style="display: none;">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="currentDate" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+            <button type="submit">Sign Out</button>
+        </form>
+        <form th:action="@{/attendancereport}" method="get">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <button type="submit">View Report</button>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        function updateDateTime() {
+            var now = new Date();
+            var dateTimeString = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                                 ('0' + now.getDate()).slice(-2) + ' ' + ('0' + now.getHours()).slice(-2) + ':' +
+                                 ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2);
+            document.getElementById('currentDateTime').innerHTML = dateTimeString;
+        }
+
+        function initializeForms() {
+            const signedIn = localStorage.getItem('signedIn') === 'true';
+            document.getElementById('signInForm').style.display = signedIn ? 'none' : 'block';
+            document.getElementById('signOutForm').style.display = signedIn ? 'block' : 'none';
+        }
+
+        window.onload = function () {
+            updateDateTime();
+            setInterval(updateDateTime, 1000); 
+            initializeForms();
+        };
+
+        document.getElementById('signInForm').onsubmit = function () {
+            localStorage.setItem('signedIn', 'true');
+        };
+
+        document.getElementById('signOutForm').onsubmit = function () {
+            localStorage.setItem('signedIn', 'false');
+        };
+    </script>
+</body>
+</html>

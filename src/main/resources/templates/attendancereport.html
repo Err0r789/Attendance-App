@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Report</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .report-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            width: 90%; 
+            max-width: 800px; 
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px; 
+            margin-bottom: 20px;  
+        }
+        th, td {
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2; 
+            font-size: 16px; 
+        }
+        td {
+            font-size: 14px; 
+        }
+        .logout-link {
+            display: block;  
+            width: fit-content;  
+            margin: 0 auto;  
+            padding: 10px 20px;  
+            background-color: #d9534f;  
+            color: white;  
+            text-align: center;
+            text-decoration: none;  
+            border-radius: 5px;  
+            transition: background-color 0.3s;  
+        }
+        .logout-link:hover {
+            background-color: #c23321;  
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px; 
+            }
+            .report-container {
+                width: 100%; 
+                padding: 10px; 
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="report-container">
+    <h1>Attendance Report</h1> 
+    <table>
+        <thead>
+            <tr>
+                <th>Sign In Time</th>
+                <th>Sign Out Time</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="attendance : ${attendances}">
+                <td th:text="${attendance.signIn}"></td> 
+                <td th:text="${attendance.signOut}"></td> 
+                <td th:text="${attendance.status}"></td>
+                <td th:text="${attendance.Date}"></td> 
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/logout}" class="logout-link">Logout</a>
+</div>
+</body>
+</html>
